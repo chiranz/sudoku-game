@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import SudokuField from "./SudokuField";
 import Timer from "./Timer";
+import Result from "./Result";
 export class SudokuBoard extends Component {
   render() {
     const { sudoku, onChange } = this.props;
     return (
       <div>
         {!sudoku.solveTime && <Timer start={sudoku.startTime} />}
-        {sudoku.solveTime && <h2>You solved the sudoku!</h2>}
+        {sudoku.solveTime && <Result sudoku={sudoku} />}
         {sudoku.rows.map(row => (
           <div className="row" key={row.index}>
             {row.cols.map(field => (
