@@ -5,8 +5,19 @@ import Result from "./Result";
 export class SudokuBoard extends Component {
   render() {
     const { sudoku, onChange } = this.props;
+    const opponentTime = sudoku.challengerSolveTime
+      ? Math.floor(
+          (sudoku.challengerSolvedTime.getTime() -
+            sudoku.challengerStartTime.getTime()) /
+            1000
+        )
+      : null;
+    console.log(opponentTime);
     return (
       <div>
+        {opponentTime && (
+          <h3>Your opponent solved it in {opponentTime} seconds</h3>
+        )}
         {!sudoku.solveTime && <Timer start={sudoku.startTime} />}
         {sudoku.solveTime && <Result sudoku={sudoku} />}
         {sudoku.rows.map(row => (

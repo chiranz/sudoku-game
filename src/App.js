@@ -1,56 +1,8 @@
 import React, { Component } from "react";
 import SudokuBoard from "./components/SudokuBoard";
-import generator from "sudoku";
 import produce from "immer";
+import { checkSolution, generateSudoku, shareUrl } from "./lib/sudoku";
 import "./App.css";
-
-window.generator = generator;
-/*
-Generates a sudoku with a structure
-
-{rows: [{index: 0, cols: [{row: 0, col: 0, value: val, readOnly: Bool}...]}...]}
-
-*/
-function generateSudoku() {
-  const raw = generator.makepuzzle();
-  const rawSolution = generator.solvepuzzle(raw);
-  const formattedSolution = rawSolution.map(value => value + 1);
-
-  const result = {
-    rows: [],
-    solution: formattedSolution,
-    startTime: new Date(),
-    solvedTime: null
-  };
-  const formatted = raw.map(value => (value ? value + 1 : null));
-  for (let i = 0; i < 9; i++) {
-    const row = { cols: [], index: i };
-    for (let j = 0; j < 9; j++) {
-      const value = formatted[i * 9 + j];
-      const col = {
-        row: i,
-        col: j,
-        value: value,
-        readOnly: value !== null
-      };
-      row.cols.push(col);
-    }
-    result.rows.push(row);
-  }
-  return result;
-}
-
-function checkSolution(sudoku) {
-  const candidate = sudoku.rows
-    .map(row => row.cols.map(col => col.value))
-    .flat();
-  for (let i = 0; i < candidate.length; i++) {
-    if (candidate[i] === null || candidate[i] !== sudoku.solution[i]) {
-      return false;
-    }
-  }
-  return true;
-}
 
 class App extends Component {
   constructor(props) {
@@ -66,7 +18,10 @@ class App extends Component {
         if (!state.sudoku.solvedTime) {
           const solved = checkSolution(state.sudoku);
           if (solved) {
-            state.sudoku.solveTime = new Date();
+            const solvedTime = new Date();
+            state.sudoku.solveTime = solvedTime;
+            state.sudoku.challengersSolvedTime = this.solveSudoku;
+            state.sudoku.shareUrl = shareUrl(state.sudoku);
           }
         }
       })
@@ -85,7 +40,6 @@ class App extends Component {
       })
     );
   };
-  handleSolving = state => {};
 
   render() {
     return (

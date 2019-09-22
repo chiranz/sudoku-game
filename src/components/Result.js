@@ -6,7 +6,16 @@ export class Result extends Component {
     const elapsed = Math.floor(
       (sudoku.solveTime.getTime() - sudoku.startTime.getTime()) / 1000
     );
-    return <h2>Your solved the sudoku in {elapsed} seconds.</h2>;
+
+    return (
+      <div>
+        <h2>Your solved the sudoku in {elapsed} seconds. </h2>
+        <p>
+          Challenge your friend
+          <a href={sudoku.shareUrl}>Share Link</a>
+        </p>
+      </div>
+    );
   }
 }
 
